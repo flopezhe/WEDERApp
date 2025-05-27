@@ -9,53 +9,100 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @Environment(\.colorScheme) var colorScheme
+    @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("displayModeToggleSelected") private var displayModeToggleSelected: Bool = false
+    
+    @State private var step = 0
+    @State private var showText = true
+    @State private var showButton = false
+    
+    let messages = [
+        "Welcome",
+        "We're glad you're here!",
+        "Ready to get started?"
+    ]
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        NavigationView {
+            ZStack {
+                GifImage(isDarkMode ? "giphy" : "giphy-1")
+                    .id(isDarkMode ? "giphy" : "giphy-1")
+                    .ignoresSafeArea(edges: .all)
+                
+                VStack(spacing: 20) {
+                    
+                    Spacer()
+                    
+                    
+                    if showText {
+                        Text(messages[step])
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                            .transition(.move(edge: .trailing))
+                            .id(step)
+                    }
+                    
+                    Spacer()
+                    
+                    if showButton {
+                        Text("Select Begin to Start!")
+                        NavigationLink(destination: MainView()) {
+                            Text("Begin")
+                                .font(.headline)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(isDarkMode ? .white : .black)
+                                .foregroundColor(isDarkMode ? .black : .white)
+                                .cornerRadius(10)
+                                .padding(.horizontal)
+                        }
+                        .transition(.opacity)
                     }
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                .navigationTitle("WEDER").navigationBarTitleDisplayMode(.inline)
+                .onAppear {
+                    showNextStep()
                 }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+            }
+            .fontDesign(.monospaced)
+        }.preferredColorScheme(isDarkMode ? .dark : .light)
+            .overlay(alignment: .topTrailing) {
+                Toggle("", isOn: $isDarkMode )
+                    .labelsHidden()
+                    .padding()
+            }
+    }
+    
+    func showNextStep() {
+        if step < messages.count - 1 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                withAnimation {
+                    showText = false
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    step += 1
+                    withAnimation {
+                        showText = true
+                    }
+                    showNextStep()
+                }
+            }
+        }
+        else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                withAnimation {
+                    showText = false
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation {
+                        showButton = true
                     }
                 }
-            }
-        } detail: {
-            Text("Select an item")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
             }
         }
     }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
-}

@@ -1,5 +1,5 @@
 //
-//  WEDERReminderApp.swift
+//  WEDERApp.swift
 //  WEDERReminder
 //
 //  Created by Farid Lopez on 5/23/25.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct WEDERReminderApp: App {
+struct WEDERApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
