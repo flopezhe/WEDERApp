@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -16,7 +17,7 @@ struct MainView: View {
                 
                 VStack {
                     
-                    NavigationLink(destination: Weather()) {
+                    NavigationLink(destination: WeatherView()) {
                         Text("Weather")
                             .fontDesign(.monospaced)
                             .padding()
@@ -27,7 +28,7 @@ struct MainView: View {
                             .padding(.horizontal)
                     }
 
-                    NavigationLink(destination: Outfits()) {
+                    NavigationLink(destination: OutfitsView()) {
                         Text("Outfits")
                             .fontDesign(.monospaced)
                             .padding()
@@ -40,13 +41,13 @@ struct MainView: View {
                     .toolbar {
                         // For now I will stick with not using toolbar for UI purposes, saving this incase needed for future use as a base
 //                            ToolbarItemGroup(placement: .topBarLeading) {
-//                                NavigationLink(destination: Weather()) {
+//                                NavigationLink(destination: WeatherView()) {
 //                                    Text("Weather")
 //                                        .foregroundColor(isDarkMode ? .black : .white)
 //                                        .fontDesign(.monospaced)
 //                                }
 //
-//                                NavigationLink(destination: Outfits()) {
+//                                NavigationLink(destination: OutfitsView()) {
 //                                    Text("Outfits")
 //                                        .foregroundColor(isDarkMode ? .black : .white)
 //                                        .fontDesign(.monospaced)

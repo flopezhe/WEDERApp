@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  IntroView.swift
 //  WEDERReminder
 //
 //  Created by Farid Lopez on 5/23/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
+struct IntroView: View {
     @Environment(\.colorScheme) var colorScheme
     @AppStorage("isDarkMode") private var isDarkMode = false
     @AppStorage("displayModeToggleSelected") private var displayModeToggleSelected: Bool = false
@@ -16,10 +16,12 @@ struct ContentView: View {
     @State private var step = 0
     @State private var showText = true
     @State private var showButton = false
+    @State private var isLongMessage = false
     
     let messages = [
         "Welcome",
         "This is WEDER.",
+        "You can look at a cities weather, if it's raining, night or day and temperature. You can also make an outfit depending on what the weather will be of where you're going!",
         "Ready to get started?"
     ]
     
@@ -35,7 +37,6 @@ struct ContentView: View {
                         
                         if showText {
                             Text(messages[step])
-                                .font(.largeTitle)
                                 .fontWeight(.bold)
                                 .multilineTextAlignment(.center)
                                 .frame(maxWidth: .infinity)
@@ -79,7 +80,10 @@ struct ContentView: View {
     
     func showNextStep() {
         if step < messages.count - 1 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            if messages[step].count > 15 {
+                self.isLongMessage = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + (isLongMessage ? 10 : 5)) {
                 withAnimation {
                     showText = false
                 }

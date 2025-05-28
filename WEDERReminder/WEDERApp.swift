@@ -25,7 +25,7 @@ struct WEDERApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            IntroView()
         }
         .modelContainer(sharedModelContainer)
     }
