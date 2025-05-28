@@ -19,55 +19,55 @@ struct ContentView: View {
     
     let messages = [
         "Welcome",
-        "We're glad you're here!",
+        "This is WEDER.",
         "Ready to get started?"
     ]
     
     var body: some View {
         NavigationView {
-            ZStack {
-                GifImage(isDarkMode ? "giphy" : "giphy-1")
-                    .id(isDarkMode ? "giphy" : "giphy-1")
-                    .ignoresSafeArea(edges: .all)
-                
-                VStack(spacing: 20) {
+            NavigationStack {
+                ZStack {
+                    BackgroundView()
                     
-                    Spacer()
-                    
-                    
-                    if showText {
-                        Text(messages[step])
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .multilineTextAlignment(.center)
-                            .padding()
-                            .transition(.move(edge: .trailing))
-                            .id(step)
-                    }
-                    
-                    Spacer()
-                    
-                    if showButton {
-                        Text("Select Begin to Start!")
-                        NavigationLink(destination: MainView()) {
-                            Text("Begin")
-                                .font(.headline)
-                                .padding()
+                    VStack(spacing: 20) {
+                        
+                        Spacer()
+                        
+                        if showText {
+                            Text(messages[step])
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                                .multilineTextAlignment(.center)
                                 .frame(maxWidth: .infinity)
-                                .background(isDarkMode ? .white : .black)
-                                .foregroundColor(isDarkMode ? .black : .white)
-                                .cornerRadius(10)
-                                .padding(.horizontal)
+                                .padding()
+                                .transition(.move(edge: .trailing))
+                                .id(step)
                         }
-                        .transition(.opacity)
+                        
+                        Spacer()
+                        
+                        if showButton {
+                            Text("Select Begin to Start!")
+                            NavigationLink(destination: MainView()) {
+                                Text("Begin")
+                                    .font(.headline)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(isDarkMode ? .white : .black)
+                                    .foregroundColor(isDarkMode ? .black : .white)
+                                    .cornerRadius(10)
+                                    .padding(.horizontal)
+                            }
+                            .transition(.opacity)
+                        }
+                    }
+                    .fontDesign(.monospaced)
+                    .onAppear {
+                        showNextStep()
                     }
                 }
-                .navigationTitle("WEDER").navigationBarTitleDisplayMode(.inline)
-                .onAppear {
-                    showNextStep()
-                }
+                .fontDesign(.monospaced)
             }
-            .fontDesign(.monospaced)
         }.preferredColorScheme(isDarkMode ? .dark : .light)
             .overlay(alignment: .topTrailing) {
                 Toggle("", isOn: $isDarkMode )
