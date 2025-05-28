@@ -48,6 +48,7 @@ struct ContentView: View {
                         
                         if showButton {
                             Text("Select Begin to Start!")
+                                .foregroundStyle(.white)
                             NavigationLink(destination: MainView()) {
                                 Text("Begin")
                                     .font(.headline)

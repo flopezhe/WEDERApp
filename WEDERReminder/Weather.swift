@@ -11,14 +11,15 @@ import SwiftUI
 struct Weather: View {
     @State private var city: String = ""
     @StateObject private var viewModel = WeatherViewModel()
-
+    @AppStorage("isDarkMode") private var isDarkMode = false
     
     var body: some View {
             VStack(spacing: 20) {
                 Text("Enter city to see weather.")
 
                 TextField("City", text: $city)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .overlay(RoundedRectangle(cornerRadius: 1)
+                        .stroke(isDarkMode ? Color.white : Color.black, lineWidth: 1))
                     .onSubmit {
                         viewModel.fetchWeather(for: city)
                     }
@@ -30,10 +31,24 @@ struct Weather: View {
                 } else {
                     Text("Weather will show here.")
                 }
+                
+                Button(action: {
+                    
+                }, label: {
+                    Text("Save City")
+                })
             }
             .padding()
             .fontDesign(.monospaced)
         }
+    
+    
+    func saveCity() {
+        if !city.isEmpty || city != "" {
+            let cityToSave = city
+            
+        }
+    }
     
 
 }

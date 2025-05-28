@@ -12,11 +12,17 @@ class WeatherViewModel: ObservableObject {
     @Published var temperatureF: Double?
     @Published var isDay: Bool = true
     @Published var isRaining: Bool = false
+    private var URLstring: String = ""
     
     func fetchWeather(for city: String) {
-        let urlString = "https://api.weatherapi.com/v1/current.json?key=aceb4cfde1aa468d97d191551252805&q=\(city)&aqi=no"
+        if let path = Bundle.main.path(forResource: "APIKeys", ofType: "plist"),
+           let dict = NSDictionary(contentsOfFile: path),
+           let apiKey = dict["WeatherAPIKey"] as? String {
+            let urlString = "https://api.weatherapi.com/v1/current.json?key=\(apiKey)&q=\(city)&aqi=no"
+            URLstring = urlString
+        }
         
-        guard let url = URL(string: urlString) else {
+        guard let url = URL(string: URLstring) else {
             return
         }
         
