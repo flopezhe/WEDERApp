@@ -83,6 +83,9 @@ struct IntroView: View {
             if messages[step].count > 15 {
                 self.isLongMessage = true
             }
+            else {
+                self.isLongMessage = false
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + (isLongMessage ? 10 : 5)) {
                 withAnimation {
                     showText = false

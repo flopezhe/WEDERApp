@@ -10,6 +10,8 @@ import SwiftUI
 struct SavedCitiesView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
     @ObservedObject var cityStore: CityStore
+    @StateObject private var viewModel = WeatherViewModel()
+    @State private var cityBeingViewed: String = ""
     
     var body: some View {
         VStack {
@@ -20,7 +22,12 @@ struct SavedCitiesView: View {
             }
             else {
                 ForEach(cityStore.cities, id: \.name) {city in
-                    Text(city.name)
+                    Button(action: {
+                        cityBeingViewed = city.name
+                        viewModel.fetchWeather(for: city.name)
+                    }, label: {
+                        Text(city.name)
+                    })
                     
                     Button(action: {
                         cityStore.deleteCity(id: city.id)
@@ -34,6 +41,22 @@ struct SavedCitiesView: View {
                             .cornerRadius(10)
                             .padding(.horizontal)
                     })
+                    
+                    if let temp = viewModel.temperatureF {
+                        if cityBeingViewed == city.name {
+                            Text("Temp: \(temp, specifier: "%.1f")°F")
+                            Text(viewModel.isDay ? "Daytime" : "Nighttime")
+                            Text(viewModel.isRaining ? "Raining" : "No rain")
+                        }
+                        else {
+                            Text("You can only view one city at a time. ")
+                            Text("Weather will show here.")
+                        }
+                    }
+                    else {
+                        Text("You can only view one city at a time. ")
+                        Text("Weather will show here.")
+                    }
                     
                     Spacer()
                 }
