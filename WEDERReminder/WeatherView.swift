@@ -53,6 +53,9 @@ struct WeatherView: View {
     @StateObject private var viewModel = WeatherViewModel()
     @State private var city: String = ""
     @State private var isInvalidCity: Bool = false
+    @State var showingPopup = false
+    @State var maxCitiesSaved = false
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
             VStack(spacing: 20) {
@@ -115,28 +118,42 @@ struct WeatherView: View {
                 
                 Button(action: {
                     let cityToSave = City(name: city)
-                    cityStore.addCity(cityToSave)
+                    showingPopup = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                        showingPopup = false
+                    }
+                    if cityStore.cities.count >= 3 {
+                        maxCitiesSaved = true
+                    }
+                    else {
+                        cityStore.addCity(cityToSave)
+                    }
                 }, label: {
                     Text("Save City")
                         .fontDesign(.monospaced)
                         .padding()
-                        .frame(maxWidth: .infinity)
+                        .fixedSize(horizontal: true , vertical: false )
                         .background(isDarkMode ? Color.white : Color.black)
                         .foregroundColor(isDarkMode ? .black : .white)
                         .cornerRadius(10)
                         .padding(.horizontal)
                 })
+                .popover(isPresented: $showingPopup) {
+                    Text(maxCitiesSaved ? "Limit of 3 cities reached." : "City was saved!")
+                    Text("This message will self dismiss in 5 seconds.")
+                }
                 
                 NavigationLink(destination: SavedCitiesView(cityStore: cityStore)) {
                     Text("See Saved Cities")
                         .fontDesign(.monospaced)
                         .padding()
-                        .frame(maxWidth: .infinity)
+                        .fixedSize(horizontal: true , vertical: false )
                         .background(isDarkMode ? Color.white : Color.black)
                         .foregroundColor(isDarkMode ? .black : .white)
                         .cornerRadius(10)
                         .padding(.horizontal)
                 }
+                
             }
             .padding()
             .fontDesign(.monospaced)

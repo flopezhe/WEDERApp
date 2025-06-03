@@ -21,7 +21,7 @@ struct IntroView: View {
     let messages = [
         "Welcome",
         "This is WEDER.",
-        "You can look at a cities weather, if it's raining, night or day and temperature. You can also make an outfit depending on what the weather will be of where you're going!",
+        "Check a city's weather—rain, time of day, and temperature—and plan an outfit based on the forecast!",
         "Ready to get started?"
     ]
     

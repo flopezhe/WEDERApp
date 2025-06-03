@@ -27,6 +27,12 @@ struct SavedCitiesView: View {
                         viewModel.fetchWeather(for: city.name)
                     }, label: {
                         Text(city.name)
+                            .fontDesign(.monospaced)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(isDarkMode ? Color.white : Color.black)
+                            .foregroundColor(isDarkMode ? .black : .white)
+                            .cornerRadius(10)
                     })
                     
                     Button(action: {
@@ -35,30 +41,22 @@ struct SavedCitiesView: View {
                         Text("Delete City")
                             .fontDesign(.monospaced)
                             .padding()
-                            .frame(maxWidth: .infinity)
+                            .fixedSize(horizontal: true , vertical: false )
                             .background(isDarkMode ? Color.white : Color.black)
                             .foregroundColor(isDarkMode ? .black : .white)
                             .cornerRadius(10)
-                            .padding(.horizontal)
                     })
                     
-                    if let temp = viewModel.temperatureF {
-                        if cityBeingViewed == city.name {
-                            Text("Temp: \(temp, specifier: "%.1f")°F")
-                            Text(viewModel.isDay ? "Daytime" : "Nighttime")
-                            Text(viewModel.isRaining ? "Raining" : "No rain")
-                        }
-                        else {
-                            Text("You can only view one city at a time. ")
-                            Text("Weather will show here.")
-                        }
-                    }
-                    else {
-                        Text("You can only view one city at a time. ")
-                        Text("Weather will show here.")
-                    }
-                    
-                    Spacer()
+                }
+                
+                if let temp = viewModel.temperatureF {
+                    Text("Temp: \(temp, specifier: "%.1f")°F")
+                    Text(viewModel.isDay ? "Daytime" : "Nighttime")
+                    Text(viewModel.isRaining ? "Raining" : "No rain")
+                }
+                else {
+                    Text("You can only view one city at a time. ")
+                    Text("Weather will show here.")
                 }
             }
         }
